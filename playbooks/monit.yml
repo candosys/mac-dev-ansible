@@ -1,0 +1,44 @@
+- hosts: all
+  tasks:
+  - name: Sort by Operating System
+    group_by: key={{ansible_distribution}}
+      
+- hosts: MacOSX
+  gather_facts: False
+  vars:
+    dist: monit-5.6
+    package: "{{ dist }}.tar.gz"
+    package_url: "https://dl.dropboxusercontent.com/u/2377323/{{ package }}"
+    root: /opt/mmonit
+  sudo: yes
+  tasks:
+    - name: download {{ package }}
+      get_url: url={{ package_url }} dest=/tmp/{{ package }} mode=0644
+    - name: Layout structure
+      file: state=directory path={{ root }} owner=root group=admin
+    - name: Unpack {{ package }}
+      unarchive: src=/tmp/{{ package }} dest={{ root }}
+    - name: Configure
+      command: ./configure --prefix={{ root }}/{{ dist }} --without-pam --without-ssl chdir={{ root }}/{{ dist }}
+    - name: Build
+      command: make chdir={{ root }}/{{ dist }}
+    - name: Install
+      command: make install chdir={{ root }}/{{ dist }}
+    - name: Create default link to {{ dist }}
+      file: state=link src={{ root }}/{{ dist }} dest={{ root }}/monit
+    - name: Copy rc file
+      copy: src=files/monit/monitrc dest={{ root }}/{{ dist }} mode=0600 owner=root force=yes
+    - name: Deploy launchctl script
+      copy: src=files/monit/com.tildeslash.monit.plist dest=/Library/LaunchDaemons/com.tildeslash.monit.plist force=yes
+    - name: Set access controls on plist
+      file: path=/Library/LaunchDaemons/com.tildeslash.monit.plist mode=0644 owner=root
+    - name: Unload launchctl
+      command: launchctl unload com.tildeslash.monit.plist chdir=/Library/LaunchDaemons
+      ignore_errors: True
+    - name: Load launchctl
+      command: launchctl load com.tildeslash.monit.plist chdir=/Library/LaunchDaemons
+    - name: Clean up
+      file: path=/tmp/{{ package }} state=absent
+
+
+    

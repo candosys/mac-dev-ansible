@@ -1,0 +1,33 @@
+- hosts: all
+  tasks:
+  - name: Sort by Operating System
+    group_by: key={{ansible_distribution}}
+      
+- hosts: MacOSX
+  gather_facts: False
+  vars:
+    dist: mongodb-osx-x86_64-2.4.9
+    package: "{{ dist }}.tgz"
+    package_url: "https://dl.dropboxusercontent.com/u/2377323/{{ package }}"
+  sudo: yes
+  tasks:
+    - name: download {{ package }}
+      get_url: url={{ package_url }} dest=/tmp/{{ package }} mode=0644
+    - name: Layout structure
+      file: state=directory path=/opt/mongodb/{{ dist }}/{{ item }}  owner=root group=admin
+      with_items:
+        - etc
+        - data
+        - log
+    - name: Unpack {{ package }}
+      unarchive: src=/tmp/{{ package }} dest=/opt/mongodb
+    - name: Create default link to {{ dist }}
+      file: state=link src=/opt/mongodb/{{ dist }} dest=/opt/mongodb/mongodb
+    - name: Configure
+      template: src=files/mongodb/mongodb.conf.j2 dest=/opt/mongodb/{{ dist }}/etc/mongodb.conf
+    - name: Monitizing
+      file: state=directory path=/etc/monit.d owner=root group=wheel
+    - copy: src=files/mongodb/mongodb.mcf dest=/etc/monit.d force=yes
+    - name: Clean up
+      file: path=/tmp/{{ package }} state=absent
+    

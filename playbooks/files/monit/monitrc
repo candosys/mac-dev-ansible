@@ -1,0 +1,17 @@
+#set init ensures that monit runs in the foreground and can be configured in init to be respawned if it dies
+# set init                           
+
+# check services at 1-minute intervals 
+set daemon 60
+
+#httpd configuration
+set httpd port 2812 and
+   allow admin:monit      # require user 'admin' with password 'monit'
+
+#monit log messages will go to /var/log/messages on CentOS for example
+set logfile syslog facility log_daemon
+
+
+# include custom monit config files for selerity specific services
+include /etc/monit.d/*
+

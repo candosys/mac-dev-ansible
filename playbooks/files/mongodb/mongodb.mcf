@@ -1,0 +1,8 @@
+check process mongodb with pidfile /opt/mongodb/mongodb/mongodb.pid
+   group database
+   start program = "/opt/mongodb/mongodb/bin/mongod run --config /opt/mongodb/mongodb/etc/mongodb.conf"
+   stop program = "/bin/sh -c '/bin/kill -9 $(/bin/cat /opt/mongodb/mongodb/mongodb.pid) && /bin/rm -rf /opt/mongodb/mongodb/mongodb.pid'"
+   if failed host 127.0.0.1 port 28017 protocol http
+     and request "/" with timeout 10 seconds then restart
+   if 5 restarts within 5 cycles then timeout
+
