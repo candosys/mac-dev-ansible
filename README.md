@@ -1,6 +1,9 @@
-Anible Notes
-============
+Mac Dev Ansible
+===============
+This is a collection of ansible playbooks designed to maintain a developement mac.
 
+Anible Notes
+------------
 Ansible is stupid simple. Its a collection of plugins that you call via a YAML formatted DSL. Basically all it does is read the YAML file, referred to as a playbook, and call the modules described. It can run the modules locally or remotely via SSH.  It's written in Python, which only effects you in that you need a non-ancient python installed.
 
 To get started with ansible on a machine run the `bootstrap.sh` script.

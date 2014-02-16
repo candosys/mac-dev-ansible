@@ -16,5 +16,5 @@
     - name: Run installer
       command: installer -package /tmp/{{ package }} -target /
     - name: Clean up
-      command: rm -rf /tmp/{{ package }}
+      file: path=/tmp/{{ package }} state=absent
 
