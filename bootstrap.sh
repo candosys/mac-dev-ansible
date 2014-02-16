@@ -12,7 +12,7 @@ SETUP_TOOLS=https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py
 
 echo
 echo ${SCRIPT_NAME}:
-echo This scripts bootstraps python and ansible and verified other dependencies.
+echo This scripts bootstraps python and ansible and verifies other dependencies.
 echo 
 sudo -k
 sudo -v -p "sudo password: "
