@@ -21,4 +21,4 @@
     - name: Clean up
       file: path=/tmp/{{ package }} state=absent
 
-    
+   
