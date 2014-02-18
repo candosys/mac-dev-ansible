@@ -1,0 +1,28 @@
+---
+- hosts: all
+  tasks:
+    - name: Sort by Operating System
+      group_by: key={{ansible_distribution}}
+    
+# Mua
+- hosts: MacOSX
+  gather_facts: False
+  vars:
+    dist: play-2.1.1
+    package: "{{ dist }}.zip"
+    package_url: "https://dl.dropboxusercontent.com/u/2377323/{{ package }}"
+    root: /usr/local
+  sudo: no
+  tasks:
+    - name: download {{ package }}
+      get_url: url={{ package_url }} dest=/tmp/{{ package }} mode=0644
+    - name: Prep
+      file: path={{ root }}/{{ dist }} state=absent
+    - name: Unpack {{ package }}
+      command: /usr/bin/unzip /tmp/{{ package }} chdir={{ root }}
+    - name: Create default link to {{ dist }}
+      file: state=link src={{ root }}/{{ dist }} dest={{ root }}/play
+    - name: Clean up
+      file: path=/tmp/{{ package }} state=absent
+
+    
