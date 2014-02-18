@@ -1,6 +1,6 @@
 Mac Dev Ansible
 ===============
-This is a collection of ansible playbooks designed to maintain a developement mac.
+This is a collection of ansible playbooks designed to maintain a developers mac.
 
 Anible Notes
 ------------
