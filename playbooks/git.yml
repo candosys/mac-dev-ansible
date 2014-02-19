@@ -1,0 +1,13 @@
+---
+- hosts: all
+  tasks:
+  - name: Sort by Operating System
+    group_by: key={{ansible_distribution}}
+      
+# Mua
+- hosts: MacOSX
+  gather_facts: False
+  sudo: no
+  tasks:
+  - name: "Brew install git"
+    homebrew: name=git  state=present
