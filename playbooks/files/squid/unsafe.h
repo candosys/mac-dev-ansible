@@ -1,0 +1,4 @@
+#ifndef _SQUID_COMPAT_UNSAFE_H
+#define _SQUID_COMPAT_UNSAFE_H
+
+#endif /* _SQUID_COMPAT_UNSAFE_H */
