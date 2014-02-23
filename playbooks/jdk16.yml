@@ -9,7 +9,7 @@
   sudo: yes
   vars: 
     package: JavaForOSX.pkg
-    package_url: https://dl.dropboxusercontent.com/u/2377323/{{ package }}
+    package_url: "https://dl.dropboxusercontent.com/u/2377323/{{ package }}"
   tasks:
     - name: download {{ package }}
       get_url: url={{ package_url }} dest=/tmp/{{ package }} mode=0644    
