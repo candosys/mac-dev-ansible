@@ -1,0 +1,35 @@
+---
+- hosts: all
+  tasks:
+  - name: Sort by Operating System
+    group_by: key={{ansible_distribution}}
+      
+- hosts: MacOSX
+  gather_facts: False
+  vars:
+    dist: squid-3.4.3
+    package: "{{ dist }}.tar.bz2"
+    package_url: "http://www.squid-cache.org/Versions/v3/3.4/{{ package }}"
+    root: /opt/squid
+    target: squid
+  sudo: yes
+  tasks:
+    - name: download {{ package }}
+      get_url: url={{ package_url }} dest=/tmp/{{ package }} mode=0644
+    - name: Layout structure
+      file: state=directory path={{ root }} owner=root group=admin
+    - name: Unpack {{ package }}
+      unarchive: src=/tmp/{{ package }} dest={{ root }}
+    - name: Configure
+      shell: CXXFLAGS=-Wno-error=deprecated-declarations LDFLAGS=-lresolv ./configure --prefix={{ root }}/{{ target }} --with-krb5-config=no chdir={{ root }}/{{ dist }}
+    - name: Patch
+      copy: src=files/squid/unsafe.h dest={{ root }}/{{ dist }}/compat mode=0600 owner=root force=yes
+    - name: Build
+      command: make chdir={{ root }}/{{ dist }}
+    - name: Install
+      command: make install chdir={{ root }}/{{ dist }}
+    - name: Clean up
+      file: path=/tmp/{{ package }} state=absent
+
+
+    
