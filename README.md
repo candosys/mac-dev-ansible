@@ -1,6 +1,6 @@
-Mac Dev Ansible
-===============
-This is a collection of ansible playbooks designed to maintain a developers mac.
+Mac Dev Ansible & Why?
+======================
+This is a collection of ansible playbooks designed to maintain a developers mac. Why not use ports, homebrew or fink?  Any of them work but each have issues. This collections is focused on a small subset set up in very specific manners. It *will* be less usefull to anyome else then myself.
 
 Requirements
 ------------
