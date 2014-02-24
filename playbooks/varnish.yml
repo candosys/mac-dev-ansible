@@ -1,0 +1,31 @@
+---
+- hosts: all
+  tasks:
+  - name: Sort by Operating System
+    group_by: key={{ansible_distribution}}
+      
+- hosts: MacOSX
+  gather_facts: False
+  vars:
+    dist: varnish-3.0.5
+    package: "{{ dist }}.tar.gz"
+    package_url: "http://repo.varnish-cache.org/source/{{ package }}"
+    root: /opt/varnish
+    target: varnish
+  sudo: yes
+  tasks:
+    - name: download {{ package }}
+      get_url: url={{ package_url }} dest=/tmp/{{ package }} mode=0644
+    - name: Layout structure
+      file: state=directory path={{ root }} owner=root group=admin
+    - name: Unpack {{ package }}
+      unarchive: src=/tmp/{{ package }} dest={{ root }}
+    - name: Configure
+      shell: PATH=/usr/local/bin:$PATH ./configure --prefix={{ root }}/{{ target }} chdir={{ root }}/{{ dist }}
+    - name: Build
+      command: make chdir={{ root }}/{{ dist }}
+    - name: Install
+      command: make install chdir={{ root }}/{{ dist }}
+    - name: Clean up
+      file: path=/tmp/{{ package }} state=absent
+    

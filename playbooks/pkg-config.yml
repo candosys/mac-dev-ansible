@@ -1,0 +1,15 @@
+---
+- hosts: all
+  tasks:
+  - name: Sort by Operating System
+    group_by: key={{ansible_distribution}}
+      
+# Mua
+- hosts: MacOSX
+  gather_facts: False
+  vars:
+    package: pkg-config
+  sudo: no
+  tasks:
+  - name: "Brew install {{ package }}"
+    homebrew: name={{ package }}  state=present
