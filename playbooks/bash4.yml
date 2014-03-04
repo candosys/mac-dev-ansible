@@ -1,0 +1,31 @@
+---
+- hosts: all
+  tasks:
+  - name: Sort by Operating System
+    group_by: key={{ansible_distribution}}
+      
+- hosts: MacOSX
+  gather_facts: False
+  vars:
+    dist: bash-4.3
+    package: "{{ dist }}.tar.gz"
+    package_url: "http://ftp.gnu.org/gnu/bash/{{ package }}"
+  sudo: yes
+  tasks:
+  - name: download {{ package }}
+    get_url: url={{ package_url }} dest=/tmp/{{ package }} mode=0644  
+  - name: unpack {{ package }}
+    unarchive: src=/tmp/{{ package }} dest=/tmp 
+  - name: Configure
+    command: ./configure chdir=/tmp/{{ dist }}
+  - name: Build
+    command: make chdir=/tmp/{{ dist }}
+  - name: Install
+    command: make install chdir=/tmp/{{ dist }}
+  - name: Clean up {{ package }}
+    file: path=/tmp/{{ package }} state=absent
+  - name: Clean up {{ dist }}
+    file: path=/tmp/{{ dist }} state=absent
+
+
+      
