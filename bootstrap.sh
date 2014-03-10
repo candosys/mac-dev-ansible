@@ -22,6 +22,7 @@ sudo easy_install --upgrade pip
 sudo pip install --upgrade ansible
 
 if [ -z $(which sshpass) ]; then
+  echo
   echo You do not have sshpass, at least not in your path. It makes ansible easier to use but allows for sloppy ssh use.
   echo 
   read -p "Do you wish to install it? (y/n) " REPLY
