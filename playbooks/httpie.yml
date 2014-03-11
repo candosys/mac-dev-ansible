@@ -4,11 +4,10 @@
   - name: Sort by Operating System
     group_by: key={{ansible_distribution}}
       
+# Mua
 - hosts: MacOSX
   gather_facts: False
-  vars:
-      package: httpie
   sudo: no
   tasks:
-  - name: "Brew install {{ package }}"
-    pip: name={{ package }}  state=present
+  - name: "Brew install git"
+    homebrew: name=git  state=present
