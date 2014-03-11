@@ -4,7 +4,6 @@
   - name: Sort by Operating System
     group_by: key={{ansible_distribution}}
       
-# Mua
 - hosts: MacOSX
   gather_facts: False
   vars:
