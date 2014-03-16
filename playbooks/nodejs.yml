@@ -1,0 +1,29 @@
+---
+# Get files from s3
+- hosts: all
+  sudo: yes
+  vars:
+    dist: node-v0.10.26
+    package: "{{ dist }}.tar.gz"
+    package_url: "https://dl.dropboxusercontent.com/u/2377323/node-v0.10.26.tar.gz"
+    root: /opt/nodejs
+  tasks:
+  - name: download {{ package }}
+    get_url: url={{ package_url }} dest=/tmp/{{ package }} mode=0644
+  - name: Layout structure
+    file: state=directory path={{ root }} owner=root group=admin
+  - name: Unpack {{ package }}
+    unarchive: src=/tmp/{{ package }} dest={{ root }}  
+  - name: Configure
+    shell: ./configure --prefix={{ root }}/{{ dist }} chdir={{ root }}/{{ dist }}
+  - name: make
+    command: make chdir={{ root }}/{{ dist }}
+  - name: install
+    command: make install chdir={{ root }}/{{ dist }}
+  - name: Create default link to {{ dist }}
+    file: state=link src={{ root }}/{{ dist }} dest={{ root }}/node
+  - name: Clean up
+    file: path=/tmp/{{ package }} state=absent
+
+
+
