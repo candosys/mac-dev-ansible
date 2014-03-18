@@ -1,0 +1,24 @@
+- hosts: all
+  tasks:
+  - name: Sort by Operating System
+    group_by: key={{ansible_distribution}}
+      
+- hosts: MacOSX
+  gather_facts: False
+  vars:
+    dist: apache-maven-3.0.5
+    package: "{{ dist }}-bin.tar.gz"
+    package_url: "http://apache.mirrors.hoobly.com/maven/maven-3/3.0.5/binaries/{{ package }}"
+  sudo: yes
+  tasks:
+    - name: download {{ package }}
+      get_url: url={{ package_url }} dest=/tmp/{{ package }} mode=0644
+    - name: Layout structure
+      file: state=directory path=/opt/apache  owner=root group=admin
+    - name: Unpack {{ package }}
+      unarchive: src=/tmp/{{ package }} dest=/opt/apache
+    - name: Create default link to {{ dist }}
+      file: state=link src=/opt/apache/{{ dist }} dest=/opt/apache/maven
+    - name: Clean up
+      file: path=/tmp/{{ package }} state=absent
+    
