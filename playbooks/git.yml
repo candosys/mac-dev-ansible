@@ -7,8 +7,8 @@
 - hosts: MacOSX
   gather_facts: False
   vars:
-      package: httpie
+      package: git
   sudo: no
   tasks:
-  - name: "Brew install {{ package }}"
-    pip: name={{ package }}  state=present
+  - name: "Install {{ package }}"
+    homebrew: name={{ package }}  state=present
