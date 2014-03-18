@@ -11,5 +11,5 @@
     package: pkg-config
   sudo: no
   tasks:
-  - name: "Brew install {{ package }}"
+  - name: "Install {{ package }}"
     homebrew: name={{ package }}  state=present

@@ -8,6 +8,7 @@
 - hosts: MacOSX
   gather_facts: False
   vars:
+    app: Mou.app
     package: Mou.zip
     package_url: "https://dl.dropboxusercontent.com/u/2377323/{{ package }}"
   sudo: yes
@@ -15,7 +16,7 @@
     - name: download {{ package }}
       get_url: url={{ package_url }} dest=/tmp/{{ package }} mode=0644
     - name: Prep
-      file: path=/Applications/Mou.app state=absent
+      file: path=/Applications/{{ app }} state=absent
     - name: Unpack
       unarchive: src=/tmp/{{ package }} dest=/Applications
     - name: Clean up

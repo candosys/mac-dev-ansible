@@ -12,4 +12,4 @@
   sudo: no
   tasks:
   - name: "Install {{ package }}"
-    pip: name={{ package }}  state=present
+    pip: name={{ package }} state=present
