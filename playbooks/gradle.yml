@@ -1,0 +1,24 @@
+- hosts: all
+  tasks:
+  - name: Sort by Operating System
+    group_by: key={{ansible_distribution}}
+      
+- hosts: MacOSX
+  gather_facts: False
+  vars:
+    dist: gradle-1.12
+    package: "{{ dist }}-all.zip"
+    package_url: "https://services.gradle.org/distributions/{{ package }}"
+  sudo: yes
+  tasks:
+    - name: download {{ package }}
+      get_url: url={{ package_url }} dest=/tmp/{{ package }} mode=0644
+    - name: Layout structure
+      file: state=directory path=/opt/gradle  owner=root group=admin
+    - name: Unpack {{ package }}
+      unarchive: src=/tmp/{{ package }} dest=/opt/gradle
+    - name: Create default link to {{ dist }}
+      file: state=link src=/opt/gradle/{{ dist }} dest=/opt/gradle/gradle
+    - name: Clean up
+      file: path=/tmp/{{ package }} state=absent
+    
