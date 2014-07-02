@@ -6,8 +6,8 @@
 - hosts: MacOSX
   gather_facts: False
   vars:
-    dist: gradle-1.12
-    package: "{{ dist }}-all.zip"
+    dist: gradle-2.0
+    package: "{{ dist }}-bin.zip"
     package_url: "https://services.gradle.org/distributions/{{ package }}"
   sudo: yes
   tasks:
