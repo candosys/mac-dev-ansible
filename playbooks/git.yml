@@ -2,13 +2,19 @@
 - hosts: all
   tasks:
   - name: Sort by Operating System
-    group_by: key={{ansible_distribution}}
+    group_by: key={{ ansible_distribution }}
       
 - hosts: MacOSX
   gather_facts: False
-  vars:
-      package: git
-  sudo: no
+  sudo: yes
+  vars: 
+    package: git-2.0.1-intel-universal-snow-leopard.pkg
+    package_url: "https://dl.dropboxusercontent.com/u/2377323/{{ package }}"
   tasks:
-  - name: "Install {{ package }}"
-    homebrew: name={{ package }}  state=present
+    - name: download {{ package }}
+      get_url: url={{ package_url }} dest=/tmp/{{ package }} mode=0644    
+    - name: Run installer
+      command: installer -package /tmp/{{ package }} -target /
+    - name: Clean up
+      file: path=/tmp/{{ package }} state=absent
+
