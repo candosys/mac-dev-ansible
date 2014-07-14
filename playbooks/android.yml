@@ -1,0 +1,26 @@
+---
+- hosts: all
+  tasks:
+  - name: Sort by Operating System
+    group_by: key={{ansible_distribution}}
+      
+- hosts: MacOSX
+  gather_facts: False
+  sudo: no
+  vars:
+    dist: android-sdk_r23.0.2-macosx
+    package: "{{ dist }}.zip"
+    package_url: "https://dl.dropboxusercontent.com/u/2377323/{{ package }}"
+  tasks:
+    - local_action: shell cd ~/ ; pwd
+      register: home
+    - name: Prep
+      local_action: command mkdir {{ home.stdout }}/Development creates={{ home.stdout }}/Development     
+    - name: download {{ package }}
+      local_action: get_url url={{ package_url }} dest=/tmp/{{ package }} mode=0644
+    - name: Unpack
+      local_action: unarchive src=/tmp/{{ package }} dest={{ home.stdout }}/Development       
+    - name: Clean up
+      local_action: file path=/tmp/{{ package }} state=absent
+
+      
