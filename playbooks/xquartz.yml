@@ -12,9 +12,9 @@
     package_url: "https://dl.dropboxusercontent.com/u/2377323/{{ package }}"
   tasks:
     - name: download {{ package }}
-      get_url: url={{ package_url }} dest=/tmp/{{ package }} mode=0644    
+      local_action: get_url url={{ package_url }} dest=/tmp/{{ package }} mode=0644
     - name: Run installer
-      command: installer -package /tmp/{{ package }} -target /
+      local_action: command installer -package /tmp/{{ package }} -target /
     - name: Clean up
-      file: path=/tmp/{{ package }} state=absent
+      local_action: file path=/tmp/{{ package }} state=absent
 
