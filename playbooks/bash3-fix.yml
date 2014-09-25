@@ -23,7 +23,7 @@
   - name: Build
     command: xcodebuild chdir=/tmp/{{ dist }}
   - name: Install
-    copy: src=/tmp/{{dist}}/build/Release/{{item}} dest=/bin/{{item}} mode=777 owner=root group=wheel force=yes
+    copy: src=/tmp/{{dist}}/build/Release/{{item}} dest=/bin/{{item}} mode=555 owner=root group=wheel force=yes
     with_items:
       - bash
       - sh
