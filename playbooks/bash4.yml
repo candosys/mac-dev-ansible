@@ -10,7 +10,7 @@
     dist: bash-4.3
     package: "{{ dist }}.tar.gz"
     package_url: "http://ftp.gnu.org/gnu/bash/{{ package }}"
-    patch_level: 25
+    patch_level: 30
   sudo: yes
   tasks:
   - name: download {{ package }}
