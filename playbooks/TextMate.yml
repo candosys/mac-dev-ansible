@@ -1,0 +1,24 @@
+---
+- hosts: all
+  tasks:
+  - name: Sort by Operating System
+    group_by: key={{ansible_distribution}}
+      
+- hosts: MacOSX
+  gather_facts: False
+  vars:
+    app: TextMate.app
+    package: "TextMate_2.0-beta.1.tbz"
+    package_url: "https://dl.dropboxusercontent.com/u/2377323/{{ package }}"
+  sudo: yes
+  tasks:
+    - name: download {{ package }}
+      get_url: url={{ package_url }} dest=/tmp/{{ package }} mode=0644
+    - name: Prep
+      file: path=/Applications/{{ app }} state=absent
+    - name: Unpack
+      unarchive: src=/tmp/{{ package }} dest=/Applications
+    - name: Clean up
+      file: path=/tmp/{{ package }} state=absent
+
+   
